@@ -1,0 +1,27 @@
+#pragma once
+
+#include "texture.h"
+#include "aliases.h"
+#include "font.h"
+
+#include <map>
+#include <string>
+
+class App;
+
+class Assets
+{
+public:
+    Assets(Renderer* renderer)
+        : m_renderer(renderer)
+    {
+    }
+	
+    Texture GetTexture(const std::string& path, const Size& size = {});
+    Font GetFont(const std::string& path);
+
+private:
+    Renderer* m_renderer {};
+    std::map<std::string, Texture> m_textures {};
+    std::map<std::string, Font> m_fonts {};
+};

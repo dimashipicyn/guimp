@@ -1,0 +1,45 @@
+#include "assets.h"
+
+#include "path_resolver.h"
+
+#include "SDL_image.h"
+#include <SDL_filesystem.h>
+
+Texture Assets::GetTexture(const std::string& path, const Size& size)
+{
+    auto it = m_textures.find(path);
+    if (it != m_textures.end())
+    {
+        return it->second;
+    }
+
+    SDL_Texture* tex_handle = IMG_LoadTexture(m_renderer->m_renderer, ResolvePath(path).c_str());
+    if (!tex_handle)
+    {
+        SDL_Log("LoadTexture() failed: %s\n", SDL_GetError());
+        return { nullptr };
+    }
+
+    Texture texture(tex_handle);
+    if (size.x != 0 && size.y != 0)
+    {
+        texture.Dest.w = size.x;
+        texture.Dest.h = size.y;
+    }
+
+    m_textures.emplace(std::make_pair(path, texture));
+    return texture;
+}
+
+Font Assets::GetFont(const std::string& path)
+{
+    auto it = m_fonts.find(path);
+    if (it != m_fonts.end())
+    {
+        return it->second;
+    }
+
+    Font& font = m_fonts[path];
+    font.Load(path.c_str());
+    return font;
+}
