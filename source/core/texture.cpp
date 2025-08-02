@@ -1,5 +1,6 @@
 #include "texture.h"
 #include <SDL_blendmode.h>
+#include <SDL_render.h>
 
 Texture::Texture(SDL_Texture* tex)
     : m_tex_handle(tex, SDL_DestroyTexture)

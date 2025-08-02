@@ -27,6 +27,7 @@ void Menu::Draw(App& app)
     if (!IsVisible())
         return;
     const Rect& bb = GetChild(0)->GetBoundBox();
+    app.Renderer->DrawFillRect(bb, Colors::BLACK);
     app.Renderer->DrawRect(bb, Colors::DARK_GRAY);
     UiNode::Draw(app);
 }
@@ -42,7 +43,7 @@ void MenuBar::Add(const char* title, Menu* item)
     item->SetVisible(false);
 
     auto* title_button = new Button(title);
-    title_button->OnClick([item, this](Button&){
+    title_button->OnClick([item, this](Button*){
         item->SetVisible(m_current_active != item);
         if (m_current_active)
         {

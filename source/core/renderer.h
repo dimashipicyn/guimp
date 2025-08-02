@@ -74,6 +74,9 @@ public:
         }
     }
 
+    Texture CreateTexture(const Size& size);
+    void SetRenderTarget(Texture texture);
+
     void Clear();
     void Present();
 

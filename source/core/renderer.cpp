@@ -30,6 +30,16 @@ Renderer::~Renderer()
     SDL_DestroyWindow(m_window);
 }
 
+Texture Renderer::CreateTexture(const Size& size)
+{
+    return Texture(SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, size.x, size.y));
+}
+
+void Renderer::SetRenderTarget(Texture texture)
+{
+    SDL_SetRenderTarget(m_renderer, texture.m_tex_handle.get());
+}
+
 void Renderer::Clear()
 {
     SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0);

@@ -20,6 +20,6 @@ private:
 
     std::string m_text {};
     std::string m_font_name { "fonts/minogram_6x10.xml" };
-    Color m_color { Colors::DARK_GRAY };
+    Color m_color { Colors::LIGHT_GRAY };
 };
 } // namespace ui

@@ -63,9 +63,9 @@ void Button::Draw(App& app)
         return;
 
     const Rect& bb = GetBoundBox();
+    app.Renderer->DrawFillRect(bb, Colors::GRAY);
     if (m_filled)
     {
-        app.Renderer->DrawFillRect(bb, m_border_color);
     }
     else if (m_hovered || m_down)
     {
@@ -91,7 +91,7 @@ void Button::InvokeOnClick()
 {
     for (auto& cb : m_on_click_subs)
     {
-        cb(*this);
+        cb(this);
     }
 }
 } // namespace ui

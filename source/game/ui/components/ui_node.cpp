@@ -95,7 +95,13 @@ void UiNode::Draw(App& app)
 {
     if (!IsVisible())
         return;
-    for (UiNode* child : m_childs)
+
+    auto sorted_z_index_childs = m_childs;
+    std::sort(sorted_z_index_childs.begin(), sorted_z_index_childs.end(), [](UiNode* l, UiNode* r){
+        return l->GetZIndex() < r->GetZIndex();
+    });
+
+    for (UiNode* child : sorted_z_index_childs)
     {
         if (child)
             child->Draw(app);
@@ -132,6 +138,16 @@ void UiNode::SetVisible(bool v)
 {
     if (std::exchange(m_visible, v) != v)
         SetDirty();
+}
+
+int UiNode::GetZIndex() const
+{
+    return m_zindex;
+}
+
+void UiNode::SetZIndex(int index)
+{
+    m_zindex = index;
 }
 
 Rect UiNode::ComputeBoundBox() const

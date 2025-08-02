@@ -14,4 +14,6 @@ PRIVATE
     menu.cpp
     stackable.h
     stackable.cpp
+    border.h
+    border.cpp
 )

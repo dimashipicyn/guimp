@@ -43,6 +43,9 @@ public:
     bool IsVisible() const;
     void SetVisible(bool v);
 
+    int GetZIndex() const;
+    void SetZIndex(int index);
+
     virtual void Update(App& app);
     virtual void Draw(App& app);
 
@@ -59,6 +62,7 @@ private:
     Point m_pos{};
     Rect m_margin{2, 2, 2, 2};
     mutable Rect m_boundbox{};
+    int m_zindex{0};
     mutable bool m_dirty{true};
     bool m_visible{true};
 };

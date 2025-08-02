@@ -14,7 +14,7 @@ namespace ui
 {
 class Button : public UiNode
 {
-    using Callback = std::function<void(Button& /*self*/)>;
+    using Callback = std::function<void(Button* /*self*/)>;
 public:
     // Button(UiNode* parent = nullptr);
     Button(std::string text, UiNode* parent = nullptr);
