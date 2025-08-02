@@ -1,5 +1,10 @@
 #include "ui_node.h"
+
+#include "core/app.h"
+#include "core/color.h"
+#include "core/math/point.h"
 #include "core/math/rect.h"
+#include "core/ui.h"
 
 #include <algorithm>
 
@@ -8,6 +13,11 @@ namespace ui
 UiNode::UiNode(UiNode* parent)
 {
     SetParent(parent);
+}
+
+UiNode* UiNode::GetParent()
+{
+    return m_parent;
 }
 
 void UiNode::SetParent(UiNode* parent)
@@ -39,6 +49,11 @@ int UiNode::GetChildsCount() const
 UiNode* UiNode::GetChild(int index)
 {
     return m_childs.at(index);
+}
+
+const UiNode* UiNode::GetChild(int index) const
+{
+    return const_cast<UiNode*>(this)->GetChild(index);
 }
 
 void UiNode::SetChild(int index, UiNode* ui_node)
@@ -85,6 +100,8 @@ void UiNode::Draw(App& app)
         if (child)
             child->Draw(app);
     }
+
+    // DebugDraw(app);
 }
 
 const Rect& UiNode::GetBoundBox() const
@@ -133,7 +150,7 @@ void UiNode::SetDirty()
     m_dirty = true;
 
     auto* parent = m_parent;
-    while (parent)
+    while (parent && !parent->m_dirty)
     {
         parent->m_dirty = true;
         parent = parent->m_parent;
@@ -141,9 +158,7 @@ void UiNode::SetDirty()
 
     for (int i = 0; i < GetChildsCount(); i++)
     {
-        UiNode* c = GetChild(i);
-        if (c)
-            c->m_dirty = true;
+        GetChild(i)->SetDirty();
     }
 }
 
@@ -155,5 +170,12 @@ bool UiNode::IsDirty() const
 void UiNode::ResizeChilds(int size)
 {
     m_childs.resize(size);
+}
+
+void UiNode::DebugDraw(App& app)
+{
+    const Rect& bb = GetBoundBox();
+    app.Renderer->DrawRect(bb, Colors::PURPLE);
+
 }
 } // namespace ui

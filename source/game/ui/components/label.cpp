@@ -4,6 +4,7 @@
 #include "core/color.h"
 #include "core/font.h"
 #include "core/provider.h"
+#include "ui_node.h"
 
 
 namespace ui
@@ -31,6 +32,8 @@ void Label::Draw(App& app)
     Font font = app.Assets->GetFont(m_font_name);
     font.SetColor(m_color);
     font.Draw(GetAbsPos(), m_text.c_str());
+
+    UiNode::Draw(app);
 }
 
 Rect Label::ComputeBoundBox() const
@@ -38,10 +41,10 @@ Rect Label::ComputeBoundBox() const
     Font font = Provider::Self().Assets()->GetFont(m_font_name);
     const Size calc_size = font.CalcTextSize(m_text.c_str());
     return Rect{
-        GetAbsPos().x - GetMargin().x,
-        GetAbsPos().y - GetMargin().y,
-        calc_size.x + GetMargin().w,
-        calc_size.y + GetMargin().h
+        GetAbsPos().x,
+        GetAbsPos().y,
+        calc_size.x,
+        calc_size.y
     };
 }
 } // namespace ui

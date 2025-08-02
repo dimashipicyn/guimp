@@ -16,8 +16,8 @@ public:
     const Color& GetColor() const;
     void SetColor(const Color& c);
 
-private:
     void Draw(App& app) override;
+private:
     Rect ComputeBoundBox() const override;
 
     Texture m_texture{};

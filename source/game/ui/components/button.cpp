@@ -11,22 +11,24 @@
 
 namespace ui
 {
-Button::Button(UiNode* parent)
-    : UiNode(parent)
-{
-}
+// Button::Button(UiNode* parent)
+//     : UiNode(parent)
+// {
+// }
 
 Button::Button(std::string text, UiNode* parent)
     : UiNode(parent)
 {
     auto* l = new Label(text);
+    l->SetPos(Point{l->GetMargin().x, l->GetMargin().y });
     AddChild(l);
 }
 
-Button::Button(Icon* icon, UiNode* parent)
+Button::Button(UiNode* content, UiNode* parent)
     : UiNode(parent)
 {
-    AddChild(icon);
+    content->SetPos(Point{content->GetMargin().x, content->GetMargin().y });
+    AddChild(content);
 }
 
 void Button::OnClick(Callback callback)
@@ -44,10 +46,10 @@ void Button::Update(App& app)
     if (Contains(bb, mouse))
     {
         m_hovered = true;
+        m_down = app.Input->IsMouseDown(MouseButton::Left);
         m_clicked = app.Input->IsMouseClicked(MouseButton::Left);
         if (m_clicked)
             InvokeOnClick();
-        m_down = app.Input->IsMouseDown(MouseButton::Left);
     }
     else
     {
@@ -76,9 +78,13 @@ void Button::Draw(App& app)
 Rect Button::ComputeBoundBox() const
 {
     auto rect = UiNode::ComputeBoundBox();
-    const Rect& margin = GetMargin();
     const Point& pos = GetAbsPos();
-    return Rect { pos.x - margin.x, pos.y - margin.y, rect.w + margin.w, rect.h + margin.h };
+    return Rect {
+        pos.x,
+        pos.y,
+        rect.w + GetChild(0)->GetMargin().w,
+        rect.h + GetChild(0)->GetMargin().h
+    };
 }
 
 void Button::InvokeOnClick()

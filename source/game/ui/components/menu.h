@@ -1,32 +1,37 @@
 #pragma once
 
+#include "stackable.h"
 #include "ui_node.h"
 #include "button.h"
 
 #include "core/math/size.h"
 #include <initializer_list>
+#include <vector>
 
 namespace ui
 {
-class MenuBar;
 class Menu : public UiNode
 {
 public:
-    Menu(const char* title, std::initializer_list<UiNode*> items = {});
+    Menu(std::initializer_list<UiNode*> items = {});
     void AddChild(UiNode* item) override;
+
+    void Draw(App& app) override;
+private:
+};
+
+class MenuBar : public Stackable
+{
+public:
+    MenuBar(UiNode* parent = nullptr);
+    void Add(const char* title, Menu* item);
 
     void Update(App& app) override;
     void Draw(App& app) override;
 private:
-    bool m_active{false};
-};
+    void AddChild(UiNode* c) override { Stackable::AddChild(c); }
 
-class MenuBar : public UiNode
-{
-public:
-    void Add(Menu* menu);
-private:
-    void SetItemsPositions();
-    Size m_item_max_size{};
+    std::vector<Menu*> m_menus{};
+    Menu* m_current_active{};
 };
 } // namespace ui

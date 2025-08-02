@@ -9,72 +9,75 @@
 
 namespace ui
 {
-Menu::Menu(const char* title, std::initializer_list<UiNode*> items)
+Menu::Menu(std::initializer_list<UiNode*> items)
 {
-    auto* title_button = new Button(title);
-    title_button->OnClick([this](Button&){
-        m_active = true;
-        for (int i = 1; i < GetChildsCount(); i++)
-            GetChild(i)->SetVisible(true);
-    });
-
-    UiNode::AddChild(title_button);
-    
     Stackable* stackable = new Stackable(ui::Stackable::Vertical);
-    stackable->SetPos({0, title_button->GetBoundBox().h});
     UiNode::AddChild(stackable);
-
     for (UiNode* item : items)
         stackable->AddChild(item);
 }
 
 void Menu::AddChild(UiNode* item)
 {
-    GetChild(1)->AddChild(item);
-}
-
-void Menu::Update(App& app)
-{
-    const Rect& bb = GetBoundBox();
-    if (!Contains(bb, app.Input->MousePosition()))
-    {
-        m_active = false;
-        for (int i = 1; i < GetChildsCount(); i++)
-            GetChild(i)->SetVisible(false);
-    }
-
-    UiNode::Update(app);
+    GetChild(0)->AddChild(item);
 }
 
 void Menu::Draw(App& app)
 {
-    if (m_active)
-    {
-        const Rect& bb = GetChild(1)->GetBoundBox();
-        app.Renderer->DrawRect(bb, Colors::DARK_GRAY);
-    }
+    if (!IsVisible())
+        return;
+    const Rect& bb = GetChild(0)->GetBoundBox();
+    app.Renderer->DrawRect(bb, Colors::DARK_GRAY);
     UiNode::Draw(app);
 }
 
-void MenuBar::Add(Menu* item)
+MenuBar::MenuBar(UiNode* parent)
+    : Stackable(Stackable::Horizontal, parent)
 {
-    const Rect& bb = item->GetBoundBox();
-    m_item_max_size.x = std::max(bb.w, m_item_max_size.x);
-    m_item_max_size.y = std::max(bb.h, m_item_max_size.y);
-
-    AddChild(item);
-    SetItemsPositions();
+    UiNode::AddChild(new Stackable(Stackable::Horizontal));
 }
 
-void MenuBar::SetItemsPositions()
+void MenuBar::Add(const char* title, Menu* item)
 {
-    for (int i = 0; i < GetChildsCount(); i++)
-    {
-        const Point pos{
-            i * m_item_max_size.x,// + m_item_max_size.x / 2,
-            0//m_item_max_size.y / 2,
-        };
-        GetChild(i)->SetPos(pos);
-    }
+    item->SetVisible(false);
+
+    auto* title_button = new Button(title);
+    title_button->OnClick([item, this](Button&){
+        item->SetVisible(m_current_active != item);
+        if (m_current_active)
+        {
+            m_current_active->SetVisible(false);
+        }
+        m_current_active = m_current_active != item ? item : nullptr;
+    });
+    AddChild(title_button);
+
+    item->SetPos({title_button->GetAbsPos().x, title_button->GetBoundBox().h + title_button->GetMargin().h});
+    m_menus.emplace_back(item);
+}
+
+void MenuBar::Update(App& app)
+{
+    // if (m_current_active)
+    // {
+    //     const Rect& bb = m_current_active->GetBoundBox();
+    //     if (!Contains(bb, app.Input->MousePosition()))
+    //     {
+    //         m_current_active->SetVisible(false);
+    //     }
+    // }
+
+    for (UiNode* m : m_menus)
+        m->Update(app);
+
+    UiNode::Update(app);
+}
+
+void MenuBar::Draw(App& app)
+{
+    for (UiNode* m : m_menus)
+        m->Draw(app);
+
+    UiNode::Draw(app);
 }
 } // namespace ui

@@ -4,6 +4,7 @@
 #include "core/texture.h"
 #include "ui/components/button.h"
 #include "ui/components/grid.h"
+#include "ui/components/icon.h"
 #include "ui/components/menu.h"
 #include "ui/components/stackable.h"
 #include "ui/components/ui_node.h"
@@ -19,11 +20,12 @@ public:
     void Update(App&) override;
     void Draw(App&) override;
 private:
-    ui::Grid* grid{};
+    // ui::Grid* grid{};
     ui::MenuBar* menubar{};
-    ui::Menu* file{};
-    ui::Button* button{};
-    ui::Stackable* stackableh{};
-    ui::Stackable* stackablev{};
+    // ui::Menu* file{};
+    // ui::Button* button{};
+    // ui::Stackable* stackableh{};
+    // ui::Stackable* stackablev{};
+    // ui::Stackable* icon{};
     float acc = 0;
 };

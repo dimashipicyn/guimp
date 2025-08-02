@@ -16,9 +16,9 @@ class Button : public UiNode
 {
     using Callback = std::function<void(Button& /*self*/)>;
 public:
-    Button(UiNode* parent = nullptr);
+    // Button(UiNode* parent = nullptr);
     Button(std::string text, UiNode* parent = nullptr);
-    Button(Icon* icon, UiNode* parent = nullptr);
+    Button(UiNode* content, UiNode* parent = nullptr);
     void OnClick(Callback callback);
     
     void Update(App& app) override;

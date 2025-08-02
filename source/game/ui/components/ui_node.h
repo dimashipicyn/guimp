@@ -13,11 +13,15 @@ public:
     UiNode(UiNode* parent = nullptr);
     virtual ~UiNode() = default;
 
+    UiNode* GetParent();
     void SetParent(UiNode* parent);
+
     virtual void RemoveChild(UiNode* child);
     virtual void AddChild(UiNode* child);
+
     int GetChildsCount() const;
     UiNode* GetChild(int index);
+    const UiNode* GetChild(int index) const;
     void SetChild(int index, UiNode* ui_node);
     
     template<typename T>
@@ -29,9 +33,13 @@ public:
     Point GetPos() const;
     Point GetAbsPos() const;
     void SetPos(const Point& pos);
+    
     const Rect& GetBoundBox() const;
+    virtual Rect ComputeBoundBox() const;
+
     const Rect& GetMargin() const;
     void SetMargin(const Rect& margin);
+
     bool IsVisible() const;
     void SetVisible(bool v);
 
@@ -39,16 +47,17 @@ public:
     virtual void Draw(App& app);
 
 protected:
-    virtual Rect ComputeBoundBox() const;
     void SetDirty();
     bool IsDirty() const;
     void ResizeChilds(int size);
 private:
+    void DebugDraw(App& app);
+
     UiNode* m_parent{};
     std::vector<UiNode*> m_childs{};
     
     Point m_pos{};
-    Rect m_margin{5, 5, 5, 5};
+    Rect m_margin{2, 2, 2, 2};
     mutable Rect m_boundbox{};
     mutable bool m_dirty{true};
     bool m_visible{true};
