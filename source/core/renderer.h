@@ -76,6 +76,7 @@ public:
 
     Texture CreateTexture(const Size& size);
     void SetRenderTarget(Texture texture);
+    Color GetPixel(const Point& pos);
 
     void Clear();
     void Present();
@@ -85,7 +86,7 @@ public:
         return m_window_size;
     }
 
-private:
+// private:
     friend class Assets;
 
     SDL_Renderer* m_renderer {};

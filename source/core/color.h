@@ -2,6 +2,7 @@
 
 #include <SDL_pixels.h>
 #include <SDL_stdinc.h>
+#include <cstdint>
 #include <random>
 
 using Color = SDL_Color;
@@ -41,6 +42,21 @@ inline Color Rand()
 
 } // namespace Colors
 
+constexpr Uint32 ColorToUint(const Color& color)
+{
+	return (Uint32)((color.r << 16) + (color.g << 8) + (color.b << 0));
+}
+
+constexpr Color UintToColor(Uint32 color)
+{
+    return Color {
+        static_cast<Uint8>((color >> 16) & 0xFF),
+        static_cast<Uint8>((color >> 8) & 0xFF),
+        static_cast<Uint8>(color & 0xFF),
+        static_cast<Uint8>(255),
+    };
+}
+
 constexpr Color operator|(const Color& l, const Color& r)
 {
     return Color { static_cast<Uint8>(l.r | r.r), static_cast<Uint8>(l.g | r.g), static_cast<Uint8>(l.b | r.b), static_cast<Uint8>(l.a | r.a) };
@@ -62,6 +78,16 @@ constexpr Color operator*(const Color& l, float value)
     const auto g = static_cast<Uint8>(clamp(l.g * value, 0, 255));
     const auto b = static_cast<Uint8>(clamp(l.b * value, 0, 255));
     return Color { r, g, b, static_cast<Uint8>(l.a) };
+}
+
+constexpr bool operator==(const Color& l, const Color& r)
+{
+    return l.r == r.r && l.g == r.g && l.b == r.b && l.a == r.a;
+}
+
+constexpr bool operator!=(const Color& l, const Color& r)
+{
+    return !(l == r);
 }
 
 constexpr Color Inverse(const Color& c)

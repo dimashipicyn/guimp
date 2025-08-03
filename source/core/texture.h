@@ -20,6 +20,9 @@ public:
         SDL_SetTextureAlphaMod(m_tex_handle.get(), color.a);
     }
 
+    // Color GetPixel(const Point& pos) const;
+    // void SetPixel(const Point& pos, const Color& color);
+
 private:
     using TextureHandlePtr = std::shared_ptr<SDL_Texture>;
     TextureHandlePtr m_tex_handle {};

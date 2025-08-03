@@ -4,7 +4,10 @@
 #include "core/input.h"
 #include "game/canvas.h"
 #include "game/ui/components/ui_node.h"
+#include "tools/filler.h"
 #include "tools/pencil.h"
+#include "tools/spray.h"
+#include "tools/tool_type.h"
 #include "tools/ui/tools_panel.h"
 #include "ui/components/button.h"
 #include "ui/components/icon.h"
@@ -39,7 +42,18 @@ void GameApp::OnInit()
 
     m_root_ui = new ui::Stackable(ui::Stackable::Vertical);
     m_root_ui->AddChild(menubar);
-    m_root_ui->AddChild(new guimp::ui::ToolsPanel);
+
+    auto* tools = new guimp::ui::ToolsPanel;
+    tools->OnChangeToolType += [this](ToolType type) {
+        if (type == ToolType::Pensil)
+            m_current_tool = new guimp::Pencil;
+        if (type == ToolType::Spray)
+            m_current_tool = new guimp::Spray;
+        if (type == ToolType::Filler)
+            m_current_tool = new guimp::Filler;
+
+    };
+    m_root_ui->AddChild(tools);
 
     m_canvas = new guimp::Canvas(Size{WindowWidth, WindowHeight});
     m_current_tool = new guimp::Pencil;

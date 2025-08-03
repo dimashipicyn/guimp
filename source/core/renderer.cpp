@@ -1,5 +1,6 @@
 #include "renderer.h"
 
+#include "color.h"
 #include "texture.h"
 #include <SDL_hints.h>
 #include <SDL_render.h>
@@ -38,6 +39,14 @@ Texture Renderer::CreateTexture(const Size& size)
 void Renderer::SetRenderTarget(Texture texture)
 {
     SDL_SetRenderTarget(m_renderer, texture.m_tex_handle.get());
+}
+
+Color Renderer::GetPixel(const Point& pos)
+{
+    SDL_Rect rect = { pos.x, pos.y, 1, 1 };
+    Uint32 pixelColor;
+    SDL_RenderReadPixels(m_renderer, &rect, SDL_PIXELFORMAT_RGBA8888, &pixelColor, sizeof(Uint32));
+    return UintToColor(pixelColor);
 }
 
 void Renderer::Clear()
